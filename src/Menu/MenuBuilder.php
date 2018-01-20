@@ -33,6 +33,7 @@ class MenuBuilder
         $mainGroup = new MenuGroup();
 
         $mainGroup->add(new MenuItem('Профиль', '/', 'user'));
+        $mainGroup->add(new MenuItem('Фермы', '/rig/list', 'cog'));
 
         $menu->add($mainGroup);
     }

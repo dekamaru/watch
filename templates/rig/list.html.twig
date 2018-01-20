@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ parent() }} :: Фермы
+{% endblock %}
+
+{% form_theme create_form 'bootstrap_4_layout.html.twig' %}
+
+{% block content %}
+    <p>
+        <button data-toggle="modal" data-target="#createNewRig" class="btn btn-primary"><i class="fa fa-plus"></i> Добавить</button>
+    </p>
+
+    <table class="table table-responsive-lg">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Имя</th>
+                <th>Статус</th>
+                <th>Последний отклик</th>
+                <th>Подключение</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for rig in rigs %}
+                <tr>
+                    <td>{{ rig.id }}</td>
+                    <td>{{ rig.name }}</td>
+                    <td>
+                        {% if rig.status == 0 %}
+                            <span class="badge badge-success">Работает</span>
+                        {% elseif rig.status == 1 %}
+                            <span class="badge badge-danger">Не работает</span>
+                        {% else %}
+                            <span class="badge badge-default">???</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ rig.lastSeen ? rig.lastSeen|date('d.m.Y H:i:s') : '-' }}
+                    </td>
+                    <td>
+                        {{ rig.connector.connectionString }}
+                    </td>
+                    <td>
+                        <a href="/rig/update/{{ rig.id }}" class="btn btn-primary btn-sm"><i class="fa fa-refresh"></i> Обновить</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="modal fade" id="createNewRig" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Добавление фермы</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                {{ form_start(create_form) }}
+                <div class="modal-body">
+                    {{ form_errors(create_form) }}
+                    {{ form_widget(create_form) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Добавить</button>
+                </div>
+                {{ form_end(create_form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

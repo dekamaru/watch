@@ -29,27 +29,18 @@
         </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="/logout">
+                <!--<a class="nav-link" href="{{ url('logout') }}">
                     <i class="fa fa-fw fa-sign-out"></i>
                     Logout
-                </a>
+                </a>-->
             </li>
         </ul>
     </div>
 </nav>
 <div class="content-wrapper">
     <div class="container-fluid">
-
-        <div class="row">
-            <div class="col-12">
-                <h1>Blank</h1>
-                <p>This is an example of a blank page that you can use as a starting point for creating new ones.</p>
-            </div>
-        </div>
-
+       {% block content %}{% endblock %}
     </div>
-    <!-- /.container-fluid-->
-    <!-- /.content-wrapper-->
     <footer class="sticky-footer">
         <div class="container">
             <div class="text-center">
