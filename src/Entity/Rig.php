@@ -58,6 +58,12 @@ class Rig
             return false;
         }
 
+        if (!$connection)
+        {
+            $this->setStatus(RigStatus::NOT_WORKING);
+            return false;
+        }
+
         fclose($connection);
 
         $this->setStatus(RigStatus::WORKING);
