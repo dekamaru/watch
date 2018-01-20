@@ -20,7 +20,7 @@ class RigController extends Controller
     {
         $createRigForm = $this->createForm(RigType::class, null, ['action' => $this->generateUrl('rig_create')]);
         $em = $this->getDoctrine()->getManager();
-        $rigs = $em->getRepository('App:Rig')->findAll();
+        $rigs = $em->getRepository('App:Rig')->findBy([], ['name' => 'ASC']);
 
         return $this->render('rig/list.html.twig', [
             'create_form' => $createRigForm->createView(),
