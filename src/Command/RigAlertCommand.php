@@ -43,7 +43,10 @@ class RigAlertCommand extends ContainerAwareCommand
             $status = $rig->collectData();
             if (!$status)
             {
-                $this->failed[] = $rig;
+                if ($rigStatus == RigStatus::WORKING)
+                {
+                    $this->failed[] = $rig;
+                }
                 $output->writeln($rig->getName() . ' is failed');
             }
             else
