@@ -47,28 +47,11 @@ class RigStat
      */
     private $uptime;
 
-    /**
-     * @ORM\Column(type="string")
-     */
-    private $consoleText;
-
 
     public function load($data, $type)
     {
         $this->setLocalIp($data['ipAddress']);
         $this->setUptime($data['uptime']);
-
-        // filter console text
-        $consoleTextLines = explode('\n', $data['consoleShort']);
-        if (count($consoleTextLines) == 0) {
-            $this->setConsoleText('No output');
-        } else {
-            if (empty($consoleTextLines[count($consoleTextLines) - 1])) {
-                $this->setConsoleText($consoleTextLines[count($consoleTextLines) - 2]);
-            } else {
-                $this->setConsoleText($consoleTextLines[count($consoleTextLines) - 1]);
-            }
-        }
 
         // set fanspeeds and temps
         $fanspeeds = $this->_filterData($data['gpu_fanspeed']);
@@ -228,21 +211,5 @@ class RigStat
     public function setUptime($uptime)
     {
         $this->uptime = $uptime;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getConsoleText()
-    {
-        return $this->consoleText;
-    }
-
-    /**
-     * @param mixed $consoleText
-     */
-    public function setConsoleText($consoleText)
-    {
-        $this->consoleText = $consoleText;
     }
 }

@@ -20,7 +20,6 @@
                 <th>Последний отклик</th>
                 <th>Скорость</th>
                 <th>Температура</th>
-                <th>Консоль</th>
                 <th>Сеть</th>
                 <th>Действия</th>
             </tr>
@@ -80,13 +79,6 @@
                             -
                         {% endif %}
 
-                    </td>
-                    <td>
-                        {% if rig.statistics %}
-                            <kbd style="font-size: 12px;">{{ rig.statistics.consoleText }}</kbd>
-                        {% else %}
-                            -
-                        {% endif %}
                     </td>
                     <td>
                         {% if rig.statistics %}
