@@ -91,7 +91,8 @@
                     </td>
                     <td>
                         {% if rig.statistics %}
-                            <span data-toggle="tooltip" data-placement="top" data-title="Локальный IP: {{ rig.statistics.localIp }}\nПодключение: {{ rig.connector.connectionString }}">{{ rig.statistics.publicIp }}</span>
+                            <span data-toggle="tooltip" data-placement="top" data-title="Локальный IP: {{ rig.statistics.localIp }}
+                            Подключение: {{ rig.connector.connectionString }}">{{ rig.statistics.publicIp }}</span>
                         {% else %}
                             -
                         {% endif %}
