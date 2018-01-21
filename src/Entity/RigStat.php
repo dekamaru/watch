@@ -54,8 +54,8 @@ class RigStat
         $this->setUptime($data['uptime']);
 
         // set fanspeeds and temps
-        $fanspeeds = $this->_filterData($data['gpu_fanspeed']);
-        $temps = $this->_filterData($data['gpu_temp']);
+        $fanspeeds = $this->_filterData(explode(' ', $data['gpu_fanspeed']));
+        $temps = $this->_filterData(explode(' ', $data['gpu_temp']));
 
         $this->setFanspeeds($fanspeeds);
         $this->setTemps($temps);
