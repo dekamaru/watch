@@ -32,7 +32,11 @@
         </thead>
         <tbody>
             {% for rig in rigs %}
-                <tr>
+                {% set row_color = '' %}
+                {% if rig.statistics %}
+                    {% set row_color = rig.statistics.outdated ? 'table-warning' : '' %}
+                {% endif %}
+                <tr class="{{ row_color }}">
                     <td>{{ rig.id }}</td>
                     <td>{{ rig.name }}</td>
                     <td>
@@ -87,7 +91,7 @@
                     </td>
                     <td>
                         {% if rig.statistics %}
-                            <span data-toggle="tooltip" data-placement="top" data-title="Локальный IP: {{ rig.statistics.localIp }}">{{ rig.statistics.publicIp }}</span>
+                            <span data-toggle="tooltip" data-placement="top" data-title="Локальный IP: {{ rig.statistics.localIp }}\nПодключение: {{ rig.connector.connectionString }}">{{ rig.statistics.publicIp }}</span>
                         {% else %}
                             -
                         {% endif %}

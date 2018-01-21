@@ -47,11 +47,22 @@ class RigStat
      */
     private $uptime;
 
+    /**
+     * @ORM\Column(type="smallint")
+     */
+    private $type;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $timestamp;
+
 
     public function load($data, $type)
     {
         $this->setLocalIp($data['ipAddress']);
         $this->setUptime($data['uptime']);
+        $this->setType($type);
 
         // set fanspeeds and temps
         $fanspeeds = $this->_filterData(explode(' ', $data['gpu_fanspeed']));
@@ -83,6 +94,17 @@ class RigStat
         }
 
         $this->setMiningSpeeds($miningSpeeds);
+        $this->setTimestamp(new \DateTime());
+    }
+
+    public function isOutdated()
+    {
+        if ($this->getTimestamp() === null) return false;
+
+        $now = strtotime('now');
+        $old = strtotime($this->getTimestamp()->format('Y-m-d H:i:s'));
+
+        return round(abs($now - $old) / 60) > 5;
     }
 
     private function _filterData($array)
@@ -211,5 +233,37 @@ class RigStat
     public function setUptime($uptime)
     {
         $this->uptime = $uptime;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param mixed $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTimestamp()
+    {
+        return $this->timestamp;
+    }
+
+    /**
+     * @param mixed $timestamp
+     */
+    public function setTimestamp($timestamp)
+    {
+        $this->timestamp = $timestamp;
     }
 }
