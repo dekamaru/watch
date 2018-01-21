@@ -63,6 +63,9 @@ class RigStat
         if ($type == MiningType::ZEC)
         {
             preg_match_all('/========== Sol\/s\: (.*?) Sol\/W/', $data['console'], $matches);
+            ob_start();
+            var_dump($matches);
+            file_put_contents('/tmp/tmp.txt', ob_get_clean() . PHP_EOL, FILE_APPEND);
             if (count($matches) > 0) {
                 $miningSpeeds = [$matches[count($matches) - 1]];
             } else {
