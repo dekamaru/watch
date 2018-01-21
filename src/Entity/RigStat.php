@@ -53,7 +53,7 @@ class RigStat
     private $type;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $timestamp;
 
@@ -95,6 +95,16 @@ class RigStat
 
         $this->setMiningSpeeds($miningSpeeds);
         $this->setTimestamp(new \DateTime());
+    }
+
+    public function getSpeedPostfix()
+    {
+        $postfixes = [
+            MiningType::ETH => 'Mh/s',
+            MiningType::ZEC => 'Sol/s'
+        ];
+
+        return $postfixes[$this->getType()];
     }
 
     public function isOutdated()

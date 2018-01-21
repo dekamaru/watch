@@ -56,9 +56,9 @@
                         {% if rig.statistics %}
                             {% set message = '' %}
                             {% for item in rig.statistics.miningSpeeds %}
-                                {% set message = message ~ item ~ "\n" %}
+                                {% set message = message ~ item ~ ' ' ~ rig.statistics.speedPostfix ~"\n" %}
                             {% endfor %}
-                            <span data-toggle="tooltip" data-placement="top" data-title="{{ message }}">{{ rig.statistics.miningSpeedSum }}</span>
+                            <span data-toggle="tooltip" data-placement="top" data-title="{{ message }}">{{ rig.statistics.miningSpeedSum ~ ' ' ~ rig.statistics.speedPostfix }}</span>
                         {% else %}
                             -
                         {% endif %}
