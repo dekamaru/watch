@@ -47,7 +47,7 @@
                             {% for item in rig.statistics.miningSpeeds %}
                                 {% set message = message ~ item ~ "\n" %}
                             {% endfor %}
-                            <span data-toggle="tooltip" data-placement="top" data-title="{{ message }}">{{ rig.statistics.miningSpeedSum }}</span>
+                            <span data-toggle="tooltip" data-placement="top" data-title="{{ message|nl2br }}">{{ rig.statistics.miningSpeedSum }}</span>
                         {% else %}
                             -
                         {% endif %}
@@ -72,7 +72,7 @@
                             {% endfor %}
                             {% set message = message ~ " %" %}
 
-                            <span data-toggle="tooltip" data-placement="top" data-title="{{ message }}"><span class="text-{{ color }}">{{ max_temp }}℃</span> <small>{{ max(rig.statistics.fanspeeds) }}%</small></span>
+                            <span data-toggle="tooltip" data-placement="top" data-title="{{ message|nl2br }}"><span class="text-{{ color }}">{{ max_temp }}℃</span> <small>{{ max(rig.statistics.fanspeeds) }}%</small></span>
                         {% else %}
                             -
                         {% endif %}
