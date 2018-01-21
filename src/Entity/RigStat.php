@@ -64,7 +64,7 @@ class RigStat
         {
             preg_match_all('/========== Sol\/s\: (.*?) Sol\/W/', $data['console'], $matches);
             if (count($matches) > 0) {
-                $miningSpeeds = floatval([$matches[count($matches) - 1][1]]);
+                $miningSpeeds = [floatval([$matches[count($matches) - 1][1]])];
             } else {
                 $miningSpeeds = [];
             }
