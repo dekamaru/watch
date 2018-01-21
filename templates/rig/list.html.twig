@@ -18,7 +18,10 @@
                 <th>Имя</th>
                 <th>Статус</th>
                 <th>Последний отклик</th>
-                <th>Подключение</th>
+                <th>Скорость</th>
+                <th>Температура</th>
+                <th>Консоль</th>
+                <th>Сеть</th>
                 <th>Действия</th>
             </tr>
         </thead>
@@ -28,6 +31,7 @@
                     <td>{{ rig.id }}</td>
                     <td>{{ rig.name }}</td>
                     <td>
+                        {% set message = 'Аптайм: ' ~ (rig.statistics.uptime ? rig.statistics.uptime : '-') %}
                         {% if rig.status == 0 %}
                             <span class="badge badge-success">Работает</span>
                         {% elseif rig.status == 1 %}
@@ -37,10 +41,59 @@
                         {% endif %}
                     </td>
                     <td>
-                        {{ rig.lastSeen ? rig.lastSeen|date('d.m.Y H:i:s') : '-' }}
+                        <span data-toggle="tooltip" data-placement="top" data-title="{{ rig.lastSeen ? rig.lastSeen|date('d.m.Y H:i:s') : '-' }}">{{ rig.lastSeen ? rig.lastSeen|ago : '-' }}</span>
                     </td>
                     <td>
-                        {{ rig.connector.connectionString }}
+                        {% if rig.statistics %}
+                            {% set message = '' %}
+                            {% for item in rig.statistics.miningSpeeds %}
+                                {% set message = message ~ item ~ "\n" %}
+                            {% endfor %}
+                            <span data-toggle="tooltip" data-placement="top" data-title="{{ message }}">{{ rig.statistics.miningSpeedSum }}</span>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if rig.statistics %}
+
+                            {% set max_temp = max(rig.statistics.temps) %}
+                            {% if max_temp > 80 %}
+                                {% set color = 'danger' %}
+                            {% else %}
+                                {% set color = 'success' %}
+                            {% endif %}
+
+                            {% set message = '' %}
+                            {% for item in rig.statistics.temps %}
+                                {% set message = message ~ item ~ ' ' %}
+                            {% endfor %}
+                            {% set message = message ~ " ℃\n" %}
+
+                            {% for item in rig.statistics.fanspeeds %}
+                                {% set message = message ~ item ~ ' ' %}
+                            {% endfor %}
+                            {% set message = message ~ " %" %}
+
+                            <span data-toggle="tooltip" data-placement="top" data-title="{{ message }}"><span class="text-{{ color }}">{{ max_temp }}℃</span> <small>{{ max(rig.statistics.fanspeeds) }}%</small></span>
+                        {% else %}
+                            -
+                        {% endif %}
+
+                    </td>
+                    <td>
+                        {% if rig.statistics %}
+                            <kbd style="font-size: 12px;">{{ rig.statistics.consoleText }}</kbd>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if rig.statistics %}
+                            <span data-toggle="tooltip" data-placement="top" data-title="Локальный IP: {{ rig.statistics.localIp }}">{{ rig.statistics.publicIp }}</span>
+                        {% else %}
+                            -
+                        {% endif %}
                     </td>
                     <td>
                         <a href="{{ url('rig_update', {'rig': rig.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-refresh"></i> Обновить</a>

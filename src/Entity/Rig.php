@@ -36,6 +36,13 @@ class Rig
     private $connector;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\RigStat", cascade={"persist"})
+     * @ORM\JoinColumn(name="stat_id", referencedColumnName="id")
+     * @var RigStat
+     */
+    private $statistics;
+
+    /**
      * @ORM\Column(type="smallint")
      */
     private $status = RigStatus::NOT_WORKING;
@@ -170,6 +177,22 @@ class Rig
     public function setStatus($status)
     {
         $this->status = $status;
+    }
+
+    /**
+     * @return RigStat
+     */
+    public function getStatistics()
+    {
+        return $this->statistics;
+    }
+
+    /**
+     * @param RigStat $statistics
+     */
+    public function setStatistics(RigStat $statistics)
+    {
+        $this->statistics = $statistics;
     }
 
 }

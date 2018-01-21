@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Rig;
+use App\Entity\RigStat;
+use App\Enum\MiningType;
 use App\Form\RigType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,10 +28,23 @@ class SimpleMiningController extends Controller
             return new JsonResponse(['status' => false, 'message' => 'Rig not found']);
         }
 
-        ob_start();
-        var_dump($_REQUEST);
-        $result = ob_get_clean();
-        file_put_contents(__DIR__ . '/../../public/' . $rig->getName() . '.txt', $result . PHP_EOL, FILE_APPEND);
+        $stat = $rig->getStatistics() ?? new RigStat();
+        $stat->setPublicIp($request->getClientIp());
+        $type = MiningType::ZEC;
+        $data = json_decode($request->get('statusJson'), true);
+
+        if (!empty($request->get('statusClaymore')))
+        {
+            $data['claymore'] = json_decode($request->get('statusClaymore'), true);
+            $type = MiningType::ETH;
+        }
+
+        $stat->load($data, $type);
+
+        $rig->setStatistics($stat);
+        $em->persist($rig);
+        $em->flush();
+
         return new JsonResponse(['status' => true]);
     }
 }
