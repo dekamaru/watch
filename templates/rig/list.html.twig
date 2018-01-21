@@ -37,9 +37,8 @@
                     <td>{{ rig.name }}</td>
                     <td>
                         {% if rig.status == 0 %}
-                            {% if rig.statistics %}
-                                <span data-toggle="tooltip" data-placement="top" data-title="Аптайм: {{ rig.statistics.uptime ? rig.statistics.uptime : '-' }}" class="badge badge-success">Работает</span>
-                            {% endif %}
+                            {% set uptime = (rig.statistics ? rig.statistics.uptime : '-') %}
+                            <span data-toggle="tooltip" data-placement="top" data-title="Аптайм: {{ uptime }}" class="badge badge-success">Работает</span>
                         {% elseif rig.status == 1 %}
                             <span class="badge badge-danger">Не работает</span>
                         {% else %}
