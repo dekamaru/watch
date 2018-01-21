@@ -54,12 +54,12 @@ class RigController extends Controller
     }
 
     /**
-     * @Route(path="/rig/update/{rig}", name="rig_update")
+     * @Route(path="/rig/availability/{rig}", name="rig_update")
      */
-    public function updateAction(Request $request, Rig $rig)
+    public function updateAvailabilityAction(Request $request, Rig $rig)
     {
         $em = $this->getDoctrine()->getManager();
-        $rig->collectData();
+        $rig->checkAvailability();
         $em->persist($rig);
         $em->flush();
 

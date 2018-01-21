@@ -40,7 +40,7 @@ class RigAlertCommand extends ContainerAwareCommand
         {
             $rigStatus = $rig->getStatus();
 
-            $status = $rig->collectData();
+            $status = $rig->checkAvailability();
             if (!$status)
             {
                 if ($rigStatus == RigStatus::WORKING)

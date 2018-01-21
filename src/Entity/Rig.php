@@ -41,9 +41,14 @@ class Rig
     private $status = RigStatus::NOT_WORKING;
 
     /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $privateKey;
+
+    /**
      * This function collects data from remote machine
      */
-    public function collectData()
+    public function checkAvailability()
     {
         try {
             $connection = fsockopen(
@@ -69,6 +74,22 @@ class Rig
         $this->setStatus(RigStatus::WORKING);
         $this->setLastSeen(new DateTime());
         return true;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrivateKey()
+    {
+        return $this->privateKey;
+    }
+
+    /**
+     * @param mixed $privateKey
+     */
+    public function setPrivateKey($privateKey)
+    {
+        $this->privateKey = $privateKey;
     }
 
     /**
