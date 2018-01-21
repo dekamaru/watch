@@ -19,17 +19,11 @@ class SimpleMiningController extends Controller
     public function updateStatusAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $rig = $em->getRepository('App:Rig')->findOneBy(['privateKey' => $request->get('privateKey')]);
+        $rig = $em->getRepository('App:Rig')->findOneBy(['privateKey' => $request->get('privateKey', -1)]);
+
         if ($rig === null)
         {
             return new JsonResponse(['status' => false, 'message' => 'Rig not found']);
-        }
-
-        $publicKey = hash('sha256', $rig->getPrivateKey());
-
-        if ($publicKey !== $request->get('publicKey'))
-        {
-            return new JsonResponse(['status' => false, 'message' => 'Public key invalid']);
         }
 
         ob_start();
