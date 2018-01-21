@@ -14,7 +14,7 @@ class RigController extends Controller
 {
 
     /**
-     * @Route(path="/rig/list", name="rig_list")
+     * @Route(path="/farm/list", name="rig_list")
      */
     public function listAction(Request $request)
     {
@@ -29,7 +29,7 @@ class RigController extends Controller
     }
 
     /**
-     * @Route(path="/rig/create", name="rig_create", methods={"POST"})
+     * @Route(path="/farm/create", name="rig_create", methods={"POST"})
      */
     public function createAction(Request $request)
     {
@@ -54,7 +54,7 @@ class RigController extends Controller
     }
 
     /**
-     * @Route(path="/rig/availability/{rig}", name="rig_update")
+     * @Route(path="/farm/availability/{rig}", name="rig_update")
      */
     public function updateAvailabilityAction(Request $request, Rig $rig)
     {
