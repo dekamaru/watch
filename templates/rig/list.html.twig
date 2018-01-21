@@ -30,9 +30,9 @@
                     <td>{{ rig.id }}</td>
                     <td>{{ rig.name }}</td>
                     <td>
-                        {% set message = 'Аптайм: ' ~ (rig.statistics.uptime ? rig.statistics.uptime : '-') %}
                         {% if rig.status == 0 %}
-                            <span class="badge badge-success">Работает</span>
+                            {% set message = 'Аптайм: ' ~ (rig.statistics.uptime ? rig.statistics.uptime : '-') %}
+                            <span data-toggle="tooltip" data-placement="top" data-title="{{ message }}" class="badge badge-success">Работает</span>
                         {% elseif rig.status == 1 %}
                             <span class="badge badge-danger">Не работает</span>
                         {% else %}
@@ -55,7 +55,7 @@
                     </td>
                     <td>
                         {% if rig.statistics %}
-
+                            {{ dump(rig.statistics) }}
                             {% set max_temp = max(rig.statistics.temps) %}
                             {% if max_temp > 80 %}
                                 {% set color = 'danger' %}
