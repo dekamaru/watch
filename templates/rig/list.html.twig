@@ -97,7 +97,7 @@
                     <td>
                         {% if rig.statistics %}
                             <span data-toggle="tooltip" data-placement="top" data-title="Локальный IP: {{ rig.statistics.localIp }}">
-                                <span class="badge badge-default" data-uniqid="{{ rigs_network_colors[rig.statistics.publicIp] }}" style="background-color: #{{ rigs_network_colors[rig.statistics.publicIp] }}">{{ rig.statistics.publicIp }}</span>
+                                <span class="badge badge-primary" data-uniqid="{{ rigs_network_colors[rig.statistics.publicIp] }}" style="background-color: #{{ rigs_network_colors[rig.statistics.publicIp] }}">{{ rig.statistics.publicIp }}</span>
                             </span>
                         {% else %}
                             -
@@ -142,7 +142,7 @@
         $(document).ready(function() {
             $("table tr").hover(function(e) {
 
-                var uniqid = $(e.currentTarget).find('.badge-default').data('uniqid');
+                var uniqid = $(e.currentTarget).find('.badge-primary').data('uniqid');
 
                 if (e.type === 'mouseenter')
                 {
