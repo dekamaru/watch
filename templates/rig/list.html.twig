@@ -11,13 +11,17 @@
         .tooltip-inner {
             white-space:pre-wrap;
         }
+
+        .hovered {
+            background-color: rgba(0,0,0,.075);
+        }
     </style>
 
     <p>
         <button data-toggle="modal" data-target="#createNewRig" class="btn btn-primary"><i class="fa fa-plus"></i> Добавить</button>
     </p>
 
-    <table class="table table-responsive-lg table-sm table-hover">
+    <table class="table table-responsive-lg table-sm">
         <thead>
             <tr>
                 <th>#</th>
@@ -93,7 +97,7 @@
                     <td>
                         {% if rig.statistics %}
                             <span data-toggle="tooltip" data-placement="top" data-title="Локальный IP: {{ rig.statistics.localIp }}">
-                                <span class="badge badge-primary" style="background-color: #{{ rigs_network_colors[rig.statistics.publicIp] }}">{{ rig.statistics.publicIp }}</span>
+                                <span class="badge badge-primary" data-uniqid="{{ rigs_network_colors[rig.statistics.publicIp] }}" style="background-color: #{{ rigs_network_colors[rig.statistics.publicIp] }}">{{ rig.statistics.publicIp }}</span>
                             </span>
                         {% else %}
                             -
@@ -133,3 +137,22 @@
     </div>
 {% endblock %}
 
+{% block javascript %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("table tr").hover(function(e) {
+
+                var uniqid = $(e.currentTarget).find('.badge-primary').data('uniqid');
+
+                if (e.type === 'mouseenter')
+                {
+                    $('[data-uniqid="'+ uniqid +'"]').closest('tr').addClass('hovered');
+                }
+                else if(e.type === 'mouseleave')
+                {
+                    $('[data-uniqid="'+ uniqid +'"]').closest('tr').removeClass('hovered');
+                }
+            });
+        })
+    </script>
+{% endblock %}
