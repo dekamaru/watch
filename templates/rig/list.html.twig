@@ -93,7 +93,7 @@
                     <td>
                         {% if rig.statistics %}
                             <span data-toggle="tooltip" data-placement="top" data-title="Локальный IP: {{ rig.statistics.localIp }}">
-                                <span class="badge badge-primary" style="background-color: {{ rigs_network_colors[rig.statistics.publicIp] }}">{{ rig.statistics.publicIp }}</span>
+                                <span class="badge badge-primary" style="background-color: #{{ rigs_network_colors[rig.statistics.publicIp] }}">{{ rig.statistics.publicIp }}</span>
                             </span>
                         {% else %}
                             -
