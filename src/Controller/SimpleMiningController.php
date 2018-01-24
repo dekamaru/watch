@@ -39,7 +39,7 @@ class SimpleMiningController extends Controller
             $type = MiningType::ETH;
         }
 
-        $stat->load($data, $type);
+        $stat->import($data, $type);
 
         $rig->setStatistics($stat);
         $em->persist($rig);

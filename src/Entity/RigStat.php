@@ -58,7 +58,7 @@ class RigStat
     private $timestamp;
 
 
-    public function load($data, $type)
+    public function import($data, $type)
     {
         $this->setLocalIp($data['ipAddress']);
         $this->setUptime($data['uptime']);

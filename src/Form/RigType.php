@@ -19,6 +19,9 @@ class RigType extends AbstractType
             ->add('connector', ConnectorType::class, [
                 'label' => false
             ])
+            ->add('privateKey', TextType::class, [
+                'label' => 'Приватный ключ'
+            ])
         ;
     }
 

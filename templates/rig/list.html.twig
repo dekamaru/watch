@@ -17,7 +17,7 @@
         <button data-toggle="modal" data-target="#createNewRig" class="btn btn-primary"><i class="fa fa-plus"></i> Добавить</button>
     </p>
 
-    <table class="table table-responsive-lg">
+    <table class="table table-responsive-lg table-sm">
         <thead>
             <tr>
                 <th>#</th>
@@ -27,6 +27,7 @@
                 <th>Скорость</th>
                 <th>Температура</th>
                 <th>Сеть</th>
+                <th>SSH</th>
                 <th>Действия</th>
             </tr>
         </thead>
@@ -91,10 +92,15 @@
                     </td>
                     <td>
                         {% if rig.statistics %}
-                            <span data-toggle="tooltip" data-placement="top" data-title="Локальный IP: {{ rig.statistics.localIp }}">{{ rig.statistics.publicIp }}</span>
+                            <span data-toggle="tooltip" data-placement="top" data-title="Локальный IP: {{ rig.statistics.localIp }}">
+                                <span class="badge badge-primary" style="background-color: {{ rigs_network_colors[rig.statistics.publicIp] }}">{{ rig.statistics.publicIp }}</span>
+                            </span>
                         {% else %}
                             -
                         {% endif %}
+                    </td>
+                    <td>
+                        <kbd>{{ rig.connector.connectionString }}</kbd>
                     </td>
                     <td>
                         <a href="{{ url('rig_update', {'rig': rig.id}) }}" class="btn btn-primary btn-sm"><i class="fa fa-refresh"></i> Обновить</a>

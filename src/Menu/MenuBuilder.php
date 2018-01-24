@@ -34,6 +34,7 @@ class MenuBuilder
 
         $mainGroup->add(new MenuItem('Профиль', '/', 'user'));
         $mainGroup->add(new MenuItem('Фермы', '/farm/list', 'cog'));
+        $mainGroup->add(new MenuItem('Кошельки', '/wallet/list', 'usd'));
 
         $menu->add($mainGroup);
     }
