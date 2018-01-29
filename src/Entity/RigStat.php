@@ -108,12 +108,16 @@ class RigStat
         $this->setTimestamp(new \DateTime());
 
         // check average
-        if ($this->getAverageSpeed() == 0)
+        if ($this->getAverageSpeed() == 0 && $this->getMiningSpeedSum() != 0)
         {
             $this->setAverageSpeed($this->getMiningSpeedSum());
         }
         else
         {
+            if ($this->getMiningSpeedSum() == 0) {
+                return ImportStatus::SKIP;
+            }
+
             if ($this->getMiningSpeedSum() < $this->getAverageSpeed() * 0.9) {
                 if ($this->getLastWarning() !== null && DateUtil::getDiffInMinutes($this->getLastWarning(), new \DateTime()) < 5) {
                     return ImportStatus::SKIP;
