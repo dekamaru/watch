@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use App\Enum\ImportStatus;
 use App\Enum\MiningType;
+use App\Util\DateUtil;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -57,6 +59,15 @@ class RigStat
      */
     private $timestamp;
 
+    /**
+     * @ORM\Column(type="float", options={"default" = 0})
+     */
+    private $averageSpeed;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $lastWarning;
 
     public function import($data, $type)
     {
@@ -95,6 +106,25 @@ class RigStat
 
         $this->setMiningSpeeds($miningSpeeds);
         $this->setTimestamp(new \DateTime());
+
+        // check average
+        if ($this->getAverageSpeed() == 0)
+        {
+            $this->setAverageSpeed($this->getMiningSpeedSum());
+        }
+        else
+        {
+            if ($this->getMiningSpeedSum() < $this->getAverageSpeed() * 0.9) {
+                if ($this->getLastWarning() !== null && DateUtil::getDiffInMinutes($this->getLastWarning(), new \DateTime()) < 5) {
+                    return ImportStatus::SKIP;
+                }
+                $this->setLastWarning($this->getTimestamp());
+                return ImportStatus::AVG_ERROR;
+            } else {
+                $this->setAverageSpeed($this->getAverageSpeed() + $this->getMiningSpeedSum() / 2);
+            }
+        }
+        return ImportStatus::OK;
     }
 
     public function getSpeedPostfix()
@@ -110,11 +140,7 @@ class RigStat
     public function isOutdated()
     {
         if ($this->getTimestamp() === null) return false;
-
-        $now = strtotime('now');
-        $old = strtotime($this->getTimestamp()->format('Y-m-d H:i:s'));
-
-        return round(abs($now - $old) / 60) > 5;
+        return DateUtil::getDiffInMinutes($this->getTimestamp(), new \DateTime()) > 5;
     }
 
     private function _filterData($array)
@@ -131,6 +157,11 @@ class RigStat
     public function getMiningSpeedSum()
     {
         return array_sum($this->getMiningSpeeds());
+    }
+
+    public function __construct()
+    {
+        $this->setAverageSpeed(0);
     }
 
     /**
@@ -275,5 +306,37 @@ class RigStat
     public function setTimestamp($timestamp)
     {
         $this->timestamp = $timestamp;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAverageSpeed()
+    {
+        return $this->averageSpeed;
+    }
+
+    /**
+     * @param mixed $averageSpeed
+     */
+    public function setAverageSpeed($averageSpeed)
+    {
+        $this->averageSpeed = $averageSpeed;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLastWarning()
+    {
+        return $this->lastWarning;
+    }
+
+    /**
+     * @param mixed $lastWarning
+     */
+    public function setLastWarning($lastWarning)
+    {
+        $this->lastWarning = $lastWarning;
     }
 }

@@ -22,20 +22,9 @@ class RigController extends Controller
         $em = $this->getDoctrine()->getManager();
         $rigs = $em->getRepository('App:Rig')->findBy([], ['name' => 'ASC']);
 
-        // generate rig network colors
-        $rigsNetworkColors = [];
-        foreach($rigs as $rig)
-        {
-            if ($rig->getStatistics() !== null && !isset($rigsNetworkColors[$rig->getStatistics()->getPublicIp()]))
-            {
-                $rigsNetworkColors[$rig->getStatistics()->getPublicIp()] = dechex(rand(0x000000, 0xFFFFFF));
-            }
-        }
-
         return $this->render('rig/list.html.twig', [
             'create_form' => $createRigForm->createView(),
-            'rigs' => $rigs,
-            'rigs_network_colors' => $rigsNetworkColors
+            'rigs' => $rigs
         ]);
     }
 

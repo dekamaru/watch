@@ -63,7 +63,7 @@
                             {% for item in rig.statistics.miningSpeeds %}
                                 {% set message = message ~ item ~ ' ' ~ rig.statistics.speedPostfix ~"\n" %}
                             {% endfor %}
-                            <span data-toggle="tooltip" data-placement="top" data-title="{{ message }}">{{ rig.statistics.miningSpeedSum ~ ' ' ~ rig.statistics.speedPostfix }}</span>
+                            <span data-toggle="tooltip" data-placement="top" data-title="{{ message }}">{{ rig.statistics.miningSpeedSum ~ ' ' ~ rig.statistics.speedPostfix }} <small data-toggle="tooltip" data-placement="top" data-title="Средняя скорость">{{ rig.statistics.averageSpeed ~ ' ' ~ rig.statistics.speedPostfix }}</small></span>
                         {% else %}
                             -
                         {% endif %}
@@ -97,7 +97,7 @@
                     <td>
                         {% if rig.statistics %}
                             <span data-toggle="tooltip" data-placement="top" data-title="Локальный IP: {{ rig.statistics.localIp }}">
-                                <span class="badge badge-primary" data-uniqid="{{ rigs_network_colors[rig.statistics.publicIp] }}" style="background-color: #{{ rigs_network_colors[rig.statistics.publicIp] }}">{{ rig.statistics.publicIp }}</span>
+                                <span data-uniqid="{{ rig.statistics.publicIp }}">{{ rig.statistics.publicIp }}</span>
                             </span>
                         {% else %}
                             -

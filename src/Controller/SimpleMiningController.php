@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Rig;
 use App\Entity\RigStat;
+use App\Enum\ImportStatus;
 use App\Enum\MiningType;
 use App\Form\RigType;
+use App\Model\TelegramBot;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,7 +41,19 @@ class SimpleMiningController extends Controller
             $type = MiningType::ETH;
         }
 
-        $stat->import($data, $type);
+        $status = $stat->import($data, $type);
+        if ($status !== ImportStatus::OK) {
+            switch ($status) {
+                case ImportStatus::AVG_ERROR:
+                    $message = 'Отклонение скорости у фермы *' . $rig->getName() . '*: текущая *'. $stat->getMiningSpeedSum() .'*, средняя: *'. $stat->getAverageSpeed() .'*';
+                    TelegramBot::sendMessage('203820', $message);
+                    TelegramBot::sendMessage('196110799', $message);
+                break;
+                case ImportStatus::SKIP:
+                    // nothing to do
+                break;
+            }
+        }
 
         $rig->setStatistics($stat);
         $em->persist($rig);
