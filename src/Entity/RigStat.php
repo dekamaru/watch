@@ -121,7 +121,7 @@ class RigStat
                 $this->setLastWarning($this->getTimestamp());
                 return ImportStatus::AVG_ERROR;
             } else {
-                $this->setAverageSpeed(($this->getAverageSpeed() + $this->getMiningSpeedSum()) / 2);
+                $this->setAverageSpeed(round(($this->getAverageSpeed() + $this->getMiningSpeedSum()) / 2, 2));
             }
         }
         return ImportStatus::OK;
