@@ -354,7 +354,7 @@ class RigStat
 
     public function isNeedToWarn()
     {
-        return $this->getWarningCount() >= 5;
+        return $this->getWarningCount() >= 3;
     }
 
     public function clearWarningCount()
