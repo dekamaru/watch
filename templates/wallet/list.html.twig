@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ parent() }} :: Кошельки
+{% endblock %}
+
+{% form_theme create_form 'bootstrap_4_layout.html.twig' %}
+
+{% block content %}
+    <style>
+        .tooltip-inner {
+            white-space:pre-wrap;
+        }
+
+        .hovered {
+            background-color: rgba(0,0,0,.075);
+        }
+    </style>
+
+    <p>
+        <button data-toggle="modal" data-target="#createNewWallet" class="btn btn-primary"><i class="fa fa-plus"></i> Добавить</button>
+    </p>
+
+    <table class="table table-responsive-lg table-sm">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Название</th>
+                <th>Адрес</th>
+                <th>Баланс</th>
+                <th>Последнее обновление</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for wallet in wallets %}
+                <tr>
+                    <td>{{ wallet.id }}</td>
+                    <td>{{ wallet.name }}</td>
+                    <td>
+                        <a href="{{ wallet_pools[wallet.type] ~ wallet.address }}" target="_blank">{{ wallet.address }}</a>
+                    </td>
+                    <td>
+                        {{ wallet.balance|number_format(6, '.', ',') }} {{ wallet_short_names[wallet.type] }}
+                        {% set difference = (wallet.balance - wallet.oldBalance)|number_format(6, '.', ',') %}
+                        <small>
+                            {% if difference > 0 %}
+                                <span class="text-success">+{{ difference }}</span>
+                            {% elseif difference < 0 %}
+                                <span class="text-danger">{{ difference }}</span>
+                            {% else %}
+                                <span class="text-muted">{{ difference }}</span>
+                            {% endif %}
+                        </small>
+                    </td>
+                    <td>
+                        {{ wallet.updatedAt|ago }}
+                    </td>
+                    <td>
+                        <a href="/wallet/delete/{{ wallet.id }}" class="btn btn-danger btn-sm"><i class="fa fa-remove"></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="modal fade" id="createNewWallet" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Добавление кошелька</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                {{ form_start(create_form) }}
+                <div class="modal-body">
+                    {{ form_errors(create_form) }}
+                    {{ form_widget(create_form) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Добавить</button>
+                </div>
+                {{ form_end(create_form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

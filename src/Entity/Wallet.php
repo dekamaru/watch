@@ -26,6 +26,11 @@ class Wallet
     /**
      * @ORM\Column(type="string")
      */
+    private $name;
+
+    /**
+     * @ORM\Column(type="string")
+     */
     private $address;
 
     /**
@@ -145,5 +150,21 @@ class Wallet
     public function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param mixed $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 }

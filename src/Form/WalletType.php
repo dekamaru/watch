@@ -16,8 +16,11 @@ class WalletType extends AbstractType
     {
         $builder
             ->add('type', ChoiceType::class, [
-                'label' => 'Вид кошелька',
+                'label' => 'Тип кошелька',
                 'choices' => array_flip(\App\Enum\WalletType::NAMES)
+            ])
+            ->add('name', TextType::class, [
+                'label' => 'Имя'
             ])
             ->add('address', TextType::class, [
                 'label' => 'Адрес кошелька'

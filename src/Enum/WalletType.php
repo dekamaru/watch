@@ -15,4 +15,16 @@ abstract class WalletType
         self::ETH => 'Ethereum',
         self::ZEC => 'ZCash'
     ];
+
+    const SHORT_NAMES = [
+        self::BTC => 'BTC',
+        self::ETH => 'ETH',
+        self::ZEC => 'ZEC'
+    ];
+
+    const POOLS = [
+        self::BTC => 'https://blockchain.info/address/',
+        self::ETH => 'https://ethermine.org/miners/',
+        self::ZEC => 'https://zcash.flypool.org/miners/'
+    ];
 }

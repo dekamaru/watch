@@ -65,9 +65,9 @@ class RigStat
     private $averageSpeed;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="smallint", options={"default" = 0})
      */
-    private $lastWarning;
+    private $warningCount = 0;
 
     public function import($data, $type)
     {
@@ -119,15 +119,18 @@ class RigStat
             }
 
             if ($this->getMiningSpeedSum() < $this->getAverageSpeed() * 0.9) {
-                if ($this->getLastWarning() !== null && DateUtil::getDiffInMinutes($this->getLastWarning(), new \DateTime()) < 5) {
-                    return ImportStatus::SKIP;
+                if ($this->isNeedToWarn()) {
+                    $this->clearWarningCount();
+                    return ImportStatus::AVG_ERROR;
                 }
-                $this->setLastWarning($this->getTimestamp());
-                return ImportStatus::AVG_ERROR;
-            } else {
-                $this->setAverageSpeed(round(($this->getAverageSpeed() + $this->getMiningSpeedSum()) / 2, 2));
+
+                $this->incWarningCount();
+                return ImportStatus::SKIP;
             }
+
+            $this->setAverageSpeed(round(($this->getAverageSpeed() + $this->getMiningSpeedSum()) / 2, 2));
         }
+
         return ImportStatus::OK;
     }
 
@@ -331,16 +334,31 @@ class RigStat
     /**
      * @return mixed
      */
-    public function getLastWarning()
+    public function getWarningCount()
     {
-        return $this->lastWarning;
+        return $this->warningCount;
     }
 
     /**
-     * @param mixed $lastWarning
+     * @param mixed $warningCount
      */
-    public function setLastWarning($lastWarning)
+    public function setWarningCount($warningCount)
     {
-        $this->lastWarning = $lastWarning;
+        $this->warningCount = $warningCount;
+    }
+
+    public function incWarningCount()
+    {
+        $this->setWarningCount($this->getWarningCount() + 1);
+    }
+
+    public function isNeedToWarn()
+    {
+        return $this->getWarningCount() >= 5;
+    }
+
+    public function clearWarningCount()
+    {
+        $this->setWarningCount(0);
     }
 }
