@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Entity\Rig;
 use App\Enum\RigStatus;
 use App\Model\TelegramBot;
+use App\Util\DateUtil;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -23,6 +24,8 @@ class RigAlertCommand extends ContainerAwareCommand
     private $failed = [];
     /** @var Rig[] */
     private $recovered = [];
+    /** @var Rig[] */
+    private $hourDatedRigs = [];
 
     protected function configure()
     {
@@ -46,6 +49,13 @@ class RigAlertCommand extends ContainerAwareCommand
                 if ($rigStatus == RigStatus::WORKING)
                 {
                     $this->failed[] = $rig;
+                }
+                else
+                {
+                    // not working rig
+                    if (DateUtil::getDiffInMinutes($rig->getLastSeen(), new \DateTime()) > 60) {
+                        $this->hourDatedRigs[] = $rig;
+                    }
                 }
                 $output->writeln($rig->getName() . ' is failed');
             }
@@ -73,6 +83,19 @@ class RigAlertCommand extends ContainerAwareCommand
 
             TelegramBot::sendMessage('203820', $this->failMessage);
             TelegramBot::sendMessage('196110799', $this->failMessage);
+        }
+
+        if (count($this->hourDatedRigs) > 0)
+        {
+            $message = 'Фермы не доступные больше часа:' . PHP_EOL;
+            foreach($this->hourDatedRigs as $k => $rig)
+            {
+                $message .=  ($k + 1) . '. *' . $rig->getName() . '*' . PHP_EOL;
+            }
+
+            TelegramBot::sendMessage('203820', $message);
+            TelegramBot::sendMessage('196110799', $message);
+            TelegramBot::sendMessage('45982407', $message);
         }
 
         if (count($this->recovered) > 0)

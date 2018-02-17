@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Entity\Rig;
 use App\Entity\Wallet;
 use App\Enum\RigStatus;
+use App\Enum\WalletType;
 use App\Model\TelegramBot;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Command\Command;
@@ -30,11 +31,33 @@ class WalletBalanceUpdateCommand extends ContainerAwareCommand
         $em = $this->getContainer()->get('doctrine.orm.entity_manager');
         /** @var Wallet[] $wallets */
         $wallets = $em->getRepository('App:Wallet')->findAll();
+        $differences = [];
         foreach($wallets as $wallet)
         {
             $wallet->updateBalance();
             $em->persist($wallet);
+
+            $diff = $wallet->getBalance() - $wallet->getOldBalance();
+            if ($diff != 0) {
+                $differences[$wallet->getName()] = [
+                    'postfix' => WalletType::SHORT_NAMES[$wallet->getType()],
+                    'value' => ($diff > 0) ? ('+' . number_format($diff, 6)) : number_format($diff, 6)
+                ];
+            }
+
             $output->writeln($wallet->getName() . ': ' . $wallet->getOldBalance() . ' -> ' . $wallet->getBalance());
+        }
+
+        if (count($differences) > 0) {
+            $k = 1;
+            $message = 'Изменения на кошельках:' . PHP_EOL;
+            foreach ($differences as $walletName => $diff) {
+                $message .= $k . '. *' . $walletName . '* - ' . $diff['value'] . ' ' . $diff['postfix'] . PHP_EOL;
+                $k++;
+            }
+
+            TelegramBot::sendMessage('203820', $message);
+            TelegramBot::sendMessage('196110799', $message);
         }
 
         $em->flush();
