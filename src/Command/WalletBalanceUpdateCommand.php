@@ -37,7 +37,7 @@ class WalletBalanceUpdateCommand extends ContainerAwareCommand
             $wallet->updateBalance();
             $em->persist($wallet);
 
-            $diff = $wallet->getBalance() - $wallet->getOldBalance();
+            $diff = floatval(number_format($wallet->getBalance() - $wallet->getOldBalance(), 6));
             if ($diff != 0) {
                 $differences[$wallet->getName()] = [
                     'postfix' => WalletType::SHORT_NAMES[$wallet->getType()],
